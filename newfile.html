@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pendaftaran Santri Baru</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;font-family:'Poppins',sans-serif}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:url('foto-saya.jpg') center/cover no-repeat fixed;
+}
+
+.form-box{
+  width:100%;
+  max-width:480px;
+  padding:30px;
+  border-radius:22px;
+  background:rgba(255,255,255,0.18);
+  backdrop-filter: blur(12px);
+  border:1px solid rgba(212,175,55,0.8);
+  box-shadow:
+    0 0 30px rgba(212,175,55,0.6),
+    inset 0 0 25px rgba(255,255,255,0.4);
+}
+
+h2{
+  text-align:center;
+  color:#d4af37;
+  margin-bottom:20px;
+}
+
+label{
+  font-size:14px;
+  color:#222;
+}
+
+input, select{
+  width:100%;
+  padding:11px;
+  margin:6px 0 14px;
+  border-radius:10px;
+  border:1px solid #d4af37;
+  background:rgba(255,255,255,0.9);
+}
+
+input[type="file"]{
+  background:#fff;
+}
+
+button{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#d4af37,#fff);
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+button:hover{
+  opacity:0.9;
+}
+</style>
+</head>
+
+<body>
+
+<div class="form-box">
+<h2>Pendaftaran Santri</h2>
+
+<form id="formPondok">
+
+<label>Nama Lengkap</label>
+<input type="text" name="nama" required>
+
+<label>NIK</label>
+<input type="text" name="nik" required>
+
+<label>Tempat & Tanggal Lahir</label>
+<input type="text" name="ttl" placeholder="Contoh: Bandung, 12-03-2010" required>
+
+<label>Jenis Kelamin</label>
+<select name="jk" required>
+  <option value="">Pilih</option>
+  <option>Laki-laki</option>
+  <option>Perempuan</option>
+</select>
+
+<label>Alamat</label>
+<input type="text" name="alamat" required>
+
+<label>Nama Orang Tua / Wali</label>
+<input type="text" name="wali" required>
+
+<label>No WhatsApp Aktif</label>
+<input type="text" name="wa" required>
+
+<label>Upload Foto Diri</label>
+<input type="file" name="foto" required>
+
+<label>Upload Kartu Keluarga (KK)</label>
+<input type="file" name="kk" required>
+
+<button type="submit">Kirim Pendaftaran</button>
+</form>
+</div>
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbwUa0w1AyuO2GGF78jGfTNBz7tQF9x3WgkJbSK3kInmFzQc44Xjy10hXrxpEjTyCLJmgA/exec";
+const form = document.getElementById("formPondok");
+
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const data = new FormData(form);
+  data.set("foto", await toBase64(data.get("foto")));
+  data.set("kk", await toBase64(data.get("kk")));
+
+  fetch(scriptURL, { method: "POST", body: data })
+    .then(() => alert("Pendaftaran berhasil!"))
+    .catch(() => alert("Gagal mengirim"));
+});
+</script>
+</body>
+</html>
